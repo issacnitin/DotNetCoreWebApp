@@ -1,5 +1,5 @@
-# .NET Core Web App to Windows on Azure
-# Build a .NET Core Web App and deploy it to Azure as a Windows Web App.
+# .NET Core Web App to Linux on Azure
+# Build a .NET Core Web App and deploy it to Azure as a Linux Web App.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/dotnet-core
 
@@ -8,13 +8,13 @@ trigger:
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: '54c0a08d-c99b-4c1a-acc5-c1ba89453643'
+  azureSubscription: '0ba559e2-6c96-4abf-9821-6e8a1048e982'
 
   # Web App name
-  webAppName: 'issacnitindotnetcorewinwebapp'
+  webAppName: 'issacnitindotnetcorelinuxwebapp'
 
   # Agent VM image name
-  vmImageName: 'vs2017-win2016'
+  vmImageName: 'ubuntu-latest'
 
   # Working Directory
   workingDirectory: '$(System.DefaultWorkingDirectory)'
@@ -29,8 +29,8 @@ variables:
   testProjects: "**/*[Tt]est*/*.csproj"
 
   # Dotnet Core Version
-  dotnetCoreVersion: 3.x
-  
+  dotnetCoreVersion: 2.x
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -47,7 +47,7 @@ stages:
       inputs:
         packageType: sdk
         version: $(dotnetCoreVersion)
-
+        
     - task: DotNetCoreCLI@2
       displayName: Restore
       inputs:
@@ -102,6 +102,7 @@ stages:
               ConnectionType: "AzureRM"
               ConnectedServiceName: $(azureSubscription)
               WebAppName: $(webAppName)
-              WebAppKind: webApp
+              WebAppKind: webAppLinux
               Package: $(Pipeline.Workspace)/**/*.zip
               DeploymentType: "webDeploy"
+              RuntimeStack: "DOTNETCORE|2.2"
